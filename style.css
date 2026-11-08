@@ -1,0 +1,450 @@
+/* CSS stands for Cascading Style Sheets. It controls the visual appearance of a webpage, such as colors, fonts, margins, sizing, and layouts. */
+
+/* :root represents the highest-level element in the document (the <html> tag). We define "CSS Variables" (custom reusable properties starting with "--") here so that we can reuse the same colors and styles throughout the entire sheet and change them easily in one place. */
+:root {
+    --bg-main: #0b0f19;          /* Main backdrop color of the entire screen (deep navy) */
+    --bg-card: #131b2e;          /* Background color for cards and side panels */
+    --bg-input: #1a243d;         /* Background color for form fields, sliders, and boxes */
+    --border-color: #263554;     /* Color used for dividing lines and box borders */
+    --text-main: #f1f5f9;        /* Primary bright font color for readability */
+    --text-dim: #94a3b8;         /* Subdued, secondary font color for hints and labels */
+    --accent: #38bdf8;           /* Primary highlight color (bright cyan) for buttons and active states */
+    --accent-hover: #0284c7;     /* Darker cyan applied when the mouse hovers over an accent element */
+    --accent-secondary: #6366f1; /* Secondary accent color (indigo) */
+    --danger: #ef4444;           /* Warning color (red) used for destructive actions like delete */
+    --radius: 8px;               /* Corner rounding amount used across containers */
+    --font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; /* Clean fonts for body text */
+    --font-mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;              /* Monospaced (fixed-width) font for numbers, seeds, and codes */
+}
+
+/* The asterisk (*) is the universal selector. It applies the rules inside to every single element on the page. */
+* {
+    /* "border-box" changes how sizing is calculated: padding (inner spacing) and borders are included within the element's total width and height, rather than added on top of it. This prevents layouts from breaking. */
+    box-sizing: border-box;
+    /* Margin is the clear space outside an element's border. We reset it to zero to eliminate default browser spacing. */
+    margin: 0;
+    /* Padding is the clear space inside an element, between its content and its border. We reset it to zero. */
+    padding: 0;
+}
+
+/* Styles applied to the visible body of the webpage */
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    /* "vh" stands for Viewport Height (100vh = 100% of the browser window's height). This ensures the background fills the entire screen even if content is short. */
+    min-height: 100vh;
+    /* "Flexbox" (display: flex) is a layout model that makes it easy to align items horizontally or vertically. Setting direction to "column" stacks children top-to-bottom. */
+    display: flex;
+    flex-direction: column;
+}
+
+/* The overarching container that holds header, workspace, and footer */
+.app-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    /* Sets a maximum boundary so the page doesn't stretch awkwardly wide on ultra-wide monitors */
+    max-width: 1400px;
+    /* "margin: 0 auto" automatically calculates equal left and right margins, centering the container horizontally on the screen */
+    margin: 0 auto;
+    /* "rem" is a relative unit of measurement based on the root font size (usually 1rem = 16 pixels) */
+    padding: 1.5rem;
+    width: 100%;
+}
+
+/* Header section styling */
+.app-header {
+    margin-bottom: 1.5rem;
+}
+
+.app-header h1 {
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.02em; /* Slightly tightens letter spacing for a modern headline look */
+}
+
+.app-header p {
+    color: var(--text-dim);
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+/* Workspace area containing the sidebar controls and the canvas */
+.workspace {
+    /* CSS Grid is a 2-dimensional layout system. Here it defines two columns: a fixed 350-pixel left sidebar, and "1fr" (one fraction of the remaining free space) for the maze. */
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 1.5rem; /* Gap provides uniform spacing between the grid columns */
+    flex: 1;     /* Tells this container to grow and fill all available vertical room */
+}
+
+/* A "@media query" applies CSS rules only when certain conditions are met, such as screen size. This enables "Responsive Design" so pages look good on phones and computers alike. */
+@media (max-width: 900px) {
+    /* On screens narrower than 900 pixels (like mobile phones or tablets), collapse the two columns into a single stacked column. */
+    .workspace {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* The sidebar column containing user input sections */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Individual card panels inside the sidebar */
+.panel-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.panel-section h2 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+}
+
+/* Form field containers */
+.field-group {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+/* ":last-child" selects an element only if it is the final item inside its parent, removing unnecessary bottom margin */
+.field-group:last-child {
+    margin-bottom: 0;
+}
+
+.field-group label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+/* Side-by-side layout for Columns and Rows sliders */
+.field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+select, input[type="range"], input[type="number"] {
+    width: 100%;
+}
+
+select, input[type="number"] {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    outline: none; /* Removes the default browser highlight outline */
+    font-size: 0.875rem;
+}
+
+/* ":focus" applies styles when an input is actively clicked or selected by the user */
+select:focus, input[type="number"]:focus {
+    border-color: var(--accent);
+}
+
+/* Wraps the seed input and its randomizer die button side-by-side */
+.input-with-button {
+    display: flex;
+    gap: 0.4rem;
+}
+
+/* Text labels underneath sliders (e.g. "Step-by-step" vs "Instant") */
+.range-labels {
+    display: flex;
+    justify-content: space-between; /* Pushes one label all the way left and the other all the way right */
+    font-size: 0.75rem;
+    color: var(--text-dim);
+}
+
+/* Button groups and stacks */
+.btn-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    margin-top: 1.25rem;
+}
+
+.btn-stack.horizontal {
+    flex-direction: row; /* Places buttons side-by-side instead of stacked */
+}
+
+.btn-stack.horizontal .btn {
+    flex: 1; /* Makes both buttons share the width equally */
+}
+
+/* Base button styling */
+.btn {
+    border: none;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer; /* Changes the mouse pointer into a pointing finger icon when hovering */
+    /* "transition" smoothly animates changes (like color or background) over 0.15 seconds instead of snapping instantly */
+    transition: all 0.15s ease-in-out;
+}
+
+/* Compact button modifier */
+.btn.sm {
+    padding: 0.4rem 0.65rem;
+    font-size: 0.8rem;
+}
+
+/* Primary prominent button (solid cyan) */
+.btn.primary {
+    background: var(--accent);
+    color: #0b0f19;
+}
+
+/* ":hover" activates whenever the user moves their mouse over the element */
+.btn.primary:hover {
+    background: var(--accent-hover);
+}
+
+/* Secondary muted button */
+.btn.secondary {
+    background: var(--bg-input);
+    color: var(--text-main);
+    border: 1px solid var(--border-color);
+}
+
+.btn.secondary:hover {
+    background: #233152;
+}
+
+/* Transparent outline button */
+.btn.outline {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+.btn.outline:hover {
+    background: var(--bg-input);
+}
+
+/* Scrollable container for saved local storage mazes */
+.saved-mazes-container {
+    margin-top: 1rem;
+    max-height: 220px;
+    overflow-y: auto; /* Adds a vertical scrollbar if the saved items exceed 220 pixels in height */
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.empty-hint {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-style: italic;
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+/* Each saved maze bookmark row */
+.saved-item {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.5rem 0.65rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.saved-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    overflow: hidden;
+}
+
+.saved-seed {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
+.saved-meta {
+    font-size: 0.72rem;
+    color: var(--text-dim);
+}
+
+.saved-actions {
+    display: flex;
+    gap: 0.3rem;
+}
+
+.saved-actions button {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+
+.saved-actions button.del:hover {
+    border-color: var(--danger);
+    color: var(--danger);
+}
+
+.saved-actions button.load:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* Mobile directional touch pad (D-Pad) */
+.touch-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dpad {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+}
+
+.dpad-middle {
+    display: flex;
+    gap: 40px;
+}
+
+.dpad-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ":active" triggers in the exact moment a button is being pressed down or clicked */
+.dpad-btn:active {
+    background: var(--accent);
+    color: #000;
+}
+
+/* Maze display viewport container */
+.canvas-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* "position: relative" establishes a coordinate reference point so that absolutely positioned items inside it (like the win pop-up) are anchored to this box */
+    position: relative;
+}
+
+.status-bar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-family: var(--font-mono);
+    color: var(--text-dim);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.canvas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+    min-height: 450px;
+}
+
+canvas {
+    max-width: 100%;
+    max-height: 70vh;
+    /* "box-shadow" casts a drop shadow beneath the canvas for depth (horizontal-offset vertical-offset blur-radius color) */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+}
+
+/* Victory celebration popup overlay */
+.win-banner {
+    /* "position: absolute" takes the element out of regular document flow and positions it using exact top/left coordinates relative to its parent container */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* "transform: translate(-50%, -50%)" offsets the banner by half its own width and height, centering it in the middle of the screen */
+    transform: translate(-50%, -50%);
+    background: rgba(15, 23, 42, 0.95); /* rgba allows defining red, green, blue, and alpha (opacity/transparency) */
+    border: 2px solid #22c55e;
+    border-radius: 8px;
+    padding: 1.5rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+
+/* Utility class used to hide elements completely from view */
+.win-banner.hidden {
+    display: none;
+}
+
+.win-banner h3 {
+    color: #22c55e;
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.win-banner p {
+    color: var(--text-dim);
+}
+
+/* Page footer containing class attributions */
+.app-footer {
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    text-align: center;
+}
+
+.badge-cluster {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.badge {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    color: var(--accent);
+}

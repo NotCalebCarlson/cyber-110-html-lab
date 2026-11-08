@@ -1,0 +1,183 @@
+<!-- HTML stands for HyperText Markup Language. It provides the skeleton or structure of a webpage, defining what elements (like headings, buttons, and boxes) appear on the screen. -->
+
+<!-- <!DOCTYPE html> tells the web browser (like Chrome, Edge, or Safari) that this document is written in the modern version of HTML called HTML5. -->
+<!DOCTYPE html>
+
+<!-- The <html> tag wraps all the content on the entire page. The "lang='en'" attribute tells search engines and screen readers that the page content is in English. -->
+<html lang="en">
+
+<!-- The <head> section contains "metadata" (behind-the-scenes data about the page). Nothing inside <head> is drawn directly on the screen, but it tells the browser how to behave, sets the browser tab title, and links other files. -->
+<head>
+  <!-- Character encoding defines how letters and symbols are translated into computer bytes. "UTF-8" is the universal standard that includes virtually all letters, numbers, and emojis in the world. -->
+  <meta charset="UTF-8">
+
+  <!-- A "viewport" is the user's visible area of a web page. This tag ensures the layout scales properly on mobile phones and tablets rather than zooming out like a tiny desktop screen. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- The <title> sets the text that appears on the browser tab and in search engine results. -->
+  <title>Labyrinth — Interactive Maze Generator</title>
+
+  <!-- This link tag connects this HTML file to an external CSS stylesheet ("style.css"). CSS is what gives the page colors, spacing, and styling. -->
+  <link rel="stylesheet" href="https://abrupt.dev/cyber-110/html-lab/style.css">
+</head>
+
+<!-- The <body> tag contains everything that is visibly displayed to the user when they visit the webpage. -->
+<body>
+  <!-- A <div> (short for "division") is a generic container used to group elements together so we can organize and style them as a single unit. -->
+  <div class="app-container">
+
+    <!-- The <header> tag represents introductory content at the top of a page or section. -->
+    <header class="app-header">
+      <!-- <h1> is the top-level, largest heading on the page. Good for titles. -->
+      <h1>Labyrinth Generator</h1>
+      <!-- <p> stands for paragraph, representing a standard block of text. -->
+      <p>Configure parameters, visualize generation algorithms, play manually, or export clean vector mazes.</p>
+    </header>
+
+    <!-- This container holds our main dual-column layout: the controls on the left and the maze canvas on the right. -->
+    <div class="workspace">
+
+      <!-- <aside> represents content that is indirectly related or secondary to the main content, like a sidebar. Here it holds all user controls. -->
+      <aside class="sidebar">
+
+        <!-- <section> represents a standalone thematic section of a webpage. This first section holds all configuration controls. -->
+        <section class="panel-section">
+          <!-- <h2> is a second-level subheading. -->
+          <h2>Configuration</h2>
+
+          <div class="field-group">
+            <!-- A <label> is text that labels a specific input. The "for" attribute matches the "id" of the input it controls, making it accessible for screen readers and clickable. -->
+            <label for="algorithm-select">Algorithm</label>
+            <!-- A <select> tag creates a dropdown menu. An "algorithm" is a step-by-step set of rules or mathematical procedures for solving a problem or performing a task. -->
+            <select id="algorithm-select">
+              <!-- Each <option> is one choice in the dropdown menu. The "value" is what the computer code reads, while the text in between is what the human sees. -->
+              <option value="dfs">Recursive Backtracker (DFS)</option>
+              <option value="kruskal">Randomized Kruskal's</option>
+              <option value="prim">Randomized Prim's</option>
+            </select>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <!-- A <span> is an inline container used to hold small bits of text so JavaScript can update just those words without rewriting the whole line. Here it displays the current number chosen on the slider. -->
+              <label for="input-cols">Columns (<span id="val-cols">25</span>)</label>
+              <!-- An <input type="range"> creates a draggable slider bar. "min" is the lowest allowed value, "max" is the highest, and "value" is the starting default. -->
+              <input type="range" id="input-cols" min="5" max="60" value="25">
+            </div>
+            <div class="field-group">
+              <label for="input-rows">Rows (<span id="val-rows">25</span>)</label>
+              <input type="range" id="input-rows" min="5" max="60" value="25">
+            </div>
+          </div>
+
+          <div class="field-group">
+            <!-- In computer science, a "seed" is an initial starting number fed into a pseudo-random number generator so that it produces a reproducible, predictable sequence of numbers. -->
+            <label for="input-seed">Seed (leave blank for random)</label>
+            <div class="input-with-button">
+              <!-- An <input type="number"> creates a box where visitors can type numbers directly. The "placeholder" is grayed-out hint text that disappears once the user types. -->
+              <input type="number" id="input-seed" placeholder="e.g. 133742">
+              <!-- The "title" attribute creates a small tooltip that appears when a user hovers their mouse over the button. -->
+              <button id="btn-random-seed" class="btn outline sm" title="Generate Random Seed">🎲</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="input-speed">Animation Speed</label>
+            <input type="range" id="input-speed" min="1" max="100" value="65">
+            <div class="range-labels">
+              <span>Step-by-step</span>
+              <span>Instant</span>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="theme-select">Visual Theme</label>
+            <select id="theme-select">
+              <option value="neon">Cyber Neon</option>
+              <option value="mono">Clean Monochrome</option>
+              <option value="emerald">Emerald Forest</option>
+              <option value="blueprint">Blueprint</option>
+            </select>
+          </div>
+
+          <!-- A stack of action buttons for triggering maze generation, entering interactive play mode, and toggling the pathfinder solution. -->
+          <div class="btn-stack">
+            <!-- A <button> is a clickable user interface element that triggers JavaScript events when clicked. -->
+            <button id="btn-generate" class="btn primary">Generate Maze</button>
+            <button id="btn-toggle-play" class="btn secondary">Play Maze</button>
+            <button id="btn-toggle-solution" class="btn secondary">Toggle Solution (BFS)</button>
+          </div>
+        </section>
+
+        <!-- Section for local storage management. "Local storage" is a browser feature that allows websites to save data directly onto the user's hard drive so it stays even when the tab is closed or refreshed. -->
+        <section class="panel-section">
+          <h2>Saved Mazes (Local Storage)</h2>
+          <div class="btn-stack">
+            <button id="btn-save-current" class="btn secondary">Bookmark Current Seed</button>
+          </div>
+          <!-- This empty container will be filled dynamically by JavaScript whenever bookmarks are saved or loaded. -->
+          <div class="saved-mazes-container" id="saved-mazes-list">
+            <p class="empty-hint">No saved maze seeds yet.</p>
+          </div>
+        </section>
+
+        <!-- Section for exporting files. SVG stands for Scalable Vector Graphics (infinitely scalable lines), and PNG stands for Portable Network Graphics (standard pixel image). -->
+        <section class="panel-section">
+          <h2>Export</h2>
+          <div class="btn-stack horizontal">
+            <button id="btn-export-svg" class="btn outline">Export SVG</button>
+            <button id="btn-export-png" class="btn outline">Export PNG</button>
+          </div>
+        </section>
+
+        <!-- Touch Controls / D-Pad (Directional Pad): allows mobile or touchscreen users to walk through the maze without needing a physical keyboard. "data-" attributes store custom data directly in HTML elements that JavaScript can inspect. -->
+        <section class="panel-section touch-controls" id="touch-controls">
+          <h2>On-Screen Controls</h2>
+          <div class="dpad">
+            <button class="dpad-btn up" data-dir="up">▲</button>
+            <div class="dpad-middle">
+              <button class="dpad-btn left" data-dir="left">◀</button>
+              <button class="dpad-btn right" data-dir="right">▶</button>
+            </div>
+            <button class="dpad-btn down" data-dir="down">▼</button>
+          </div>
+        </section>
+      </aside>
+
+      <!-- <main> specifies the main, central content of the document. Here it houses the drawing area and real-time game status indicators. -->
+      <main class="canvas-wrapper">
+        <div class="status-bar">
+          <span id="status-text">Status: Ready</span>
+          <span id="seed-indicator">Seed: —</span>
+          <span id="stats-text">Moves: 0</span>
+        </div>
+
+        <div class="canvas-container">
+          <!-- A <canvas> tag provides an empty bitmap drawing area. JavaScript will use code to draw lines, rectangles, paths, and circles directly inside this box. -->
+          <canvas id="maze-canvas"></canvas>
+        </div>
+
+        <!-- A pop-up celebration banner that is hidden by default and only shown by JavaScript when the user navigates the player to the exit. -->
+        <div id="win-banner" class="win-banner hidden">
+          <!-- <h3> is a third-level heading. -->
+          <h3>Target Reached!</h3>
+          <p id="win-details">You solved the maze!</p>
+        </div>
+      </main>
+    </div>
+
+    <!-- The <footer> tag defines the bottom section of a webpage, typically containing copyright notices, course attributions, or author credentials. -->
+    <footer class="app-footer">
+      <div class="badge-cluster">
+        <span class="badge">CYBER 110</span>
+        <span class="badge">Brigham Young University</span>
+      </div>
+      <!-- The <strong> tag indicates strong importance, rendering the enclosed text in bold. -->
+      <p>This static web project was generated with the assistance of <strong>Gemini AI</strong> for a course project assignment.</p>
+    </footer>
+  </div>
+
+  <!-- The <script> tag links our external JavaScript file ("script.js"). It is placed at the very bottom of <body> so that the entire HTML structure loads into memory first before the script tries to find and manipulate elements. -->
+  <script src="https://abrupt.dev/cyber-110/html-lab/script.js"></script>
+</body>
+</html>
